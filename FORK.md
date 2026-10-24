@@ -64,3 +64,18 @@ git push                     # CI builds and publishes
 1. Enable wireless ADB on the head unit (dialer `*#91532547#*` + IMEI password, or Restore ×10).
 2. `adb connect <car-ip>:5555 && adb install -r overdrive-release-alpha-v*.apk`
 3. Open OverDrive → BYD Cloud → country **China**, brand **Ocean** (Seal family), account + control PIN.
+
+## Project plan (2026-10-25)
+
+Goal: control and monitor the 2025 Seal 05 DM-i (DiLink 100, China firmware) from an Android phone with no BYD
+account and no car SIM, without risking the head unit.
+
+1. Done: fork + CI + signed releases; My Car page; neutral light theme; Ocean brand fix; upstream build fixes;
+   research report `../reports/BYD head unit control options.md` (17 ranked options).
+2. At the car: test fob remote start (hold start/stop 2 s) and long-press window close; read firmware/Android
+   version in Settings → About; install the APK; dial `*#91532547#*` and record what the car shows.
+3. If wireless ADB can be enabled: finish OverDrive setup (cameras/sentry off at first), Tailscale, My Car on the
+   phone; then test the local lock/unlock rail. If it cannot: fob for control, optional read-only OBD logger.
+4. Optional remote-anywhere: spare fob wired to an ESP32/GSM relay in the car; data SIM or 4G router only if
+   head-unit features are wanted far from the car.
+5. Never: BYD cloud, CAN injection, firmware flashing, factory reset.
