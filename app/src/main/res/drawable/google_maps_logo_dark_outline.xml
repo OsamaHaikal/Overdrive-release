@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fork placeholder: upstream references this Google Maps wordmark but the PNG
+     was never committed (*.png is gitignored). A neutral map-pin stands in. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="16dp"
+    android:height="16dp"
+    android:viewportWidth="16"
+    android:viewportHeight="16">
+    <path
+        android:fillColor="#202124"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1"
+        android:pathData="M8,1C5.2,1 3,3.2 3,6c0,3.7 5,9 5,9s5,-5.3 5,-9C13,3.2 10.8,1 8,1z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M8,4.5c-0.8,0 -1.5,0.7 -1.5,1.5S7.2,7.5 8,7.5S9.5,6.8 9.5,6S8.8,4.5 8,4.5z" />
+</vector>
