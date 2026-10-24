@@ -114,11 +114,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="alpha-v${{ steps.ver.outputs.version }}"
-          NOTES="Automated fork build of ${GITHUB_SHA::7}.
-
-$(git log -1 --pretty=%s)
-
-Install from OverDrive → Updates (alpha channel) or sideload via adb."
+          SUBJECT="$(git log -1 --pretty=%s)"
+          NOTES="$(printf 'Automated fork build of %s.\n\n%s\n\nInstall from OverDrive → Updates (alpha channel) or sideload via adb.' "${GITHUB_SHA::7}" "$SUBJECT")"
           gh release create "$TAG" "${{ steps.apk.outputs.path }}" \
             --title "Alpha v${{ steps.ver.outputs.version }}" \
             --notes "$NOTES" --latest
