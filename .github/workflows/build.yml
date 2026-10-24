@@ -1,0 +1,124 @@
+# Fork CI: build a signed release APK on every push to main and publish it as
+# an immutable GitHub release tagged alpha-v<version>, which is exactly what
+# the in-app updater (AppUpdater.listVersions, "alpha" channel) enumerates.
+#
+# Required repository secrets:
+#   KEYSTORE_BASE64    base64 of the PKCS12/JKS signing keystore
+#   KEYSTORE_PASSWORD  keystore password
+#   KEY_PASSWORD       key password (same as keystore password for PKCS12)
+#   KEY_ALIAS          key alias
+#
+# Version scheme: <UTC year>.<MMDD>.<run number>, e.g. 2026.1024.3. The
+# updater compares dotted numerics, so this is strictly increasing.
+name: Build & Release
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish a GitHub release (alpha-v<version>)
+        type: boolean
+        default: true
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost \
+            /usr/local/lib/node_modules "$AGENT_TOOLSDIRECTORY/CodeQL" || true
+          df -h / | tail -1
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: >-
+            platforms;android-36
+            build-tools;36.0.0
+            ndk;26.1.10909125
+            cmake;3.22.1
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Compute version
+        id: ver
+        run: |
+          VERSION="$(date -u +%Y.%m%d).${GITHUB_RUN_NUMBER}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "code=${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
+          echo "Building alpha-v${VERSION} (versionCode ${GITHUB_RUN_NUMBER})"
+
+      - name: Decode signing keystore
+        run: |
+          if [ -z "${{ secrets.KEYSTORE_BASE64 }}" ]; then
+            echo "::error::KEYSTORE_BASE64 secret is missing"; exit 1
+          fi
+          printf '%s' "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/release.p12"
+          echo "KEYSTORE_FILE=$RUNNER_TEMP/release.p12" >> "$GITHUB_ENV"
+
+      - name: Build release APK
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:assembleRelease --no-daemon --stacktrace \
+            -Dorg.gradle.jvmargs="-Xmx5g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8" \
+            -PoverdriveVersionName="${{ steps.ver.outputs.version }}" \
+            -PoverdriveVersionCode="${{ steps.ver.outputs.code }}"
+
+      - name: Collect APK
+        id: apk
+        run: |
+          APK="$(find app/build/outputs/apk/release -name '*.apk' | head -1)"
+          if [ -z "$APK" ]; then echo "::error::no APK produced"; exit 1; fi
+          OUT="overdrive-release-alpha-v${{ steps.ver.outputs.version }}.apk"
+          cp "$APK" "$OUT"
+          echo "path=${OUT}" >> "$GITHUB_OUTPUT"
+          ls -la "$OUT"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.apk.outputs.path }}
+          path: ${{ steps.apk.outputs.path }}
+          retention-days: 30
+
+      - name: Publish GitHub release
+        if: ${{ github.event_name == 'push' || inputs.publish }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="alpha-v${{ steps.ver.outputs.version }}"
+          NOTES="Automated fork build of ${GITHUB_SHA::7}.
+
+$(git log -1 --pretty=%s)
+
+Install from OverDrive → Updates (alpha channel) or sideload via adb."
+          gh release create "$TAG" "${{ steps.apk.outputs.path }}" \
+            --title "Alpha v${{ steps.ver.outputs.version }}" \
+            --notes "$NOTES" --latest

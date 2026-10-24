@@ -92,6 +92,10 @@ tasks.configureEach {
 // OpenCV-mobile version for surveillance module (minimal build, ~3MB vs ~20MB)
 // https://github.com/nihui/opencv-mobile
 val opencvMobileVersion = "4.10.0"
+// Fork: nihui/opencv-mobile tags releases v28, v29… (not by OpenCV version);
+// the 4.10.0 Android zip is attached to these tags. The old
+// v${opencvMobileVersion} URL 404s on a clean clone.
+val opencvMobileReleaseTag = "v31"
 tasks.register("downloadOpenCV") {
     val opencvDir = file("src/main/cpp/opencv")
     
@@ -107,7 +111,7 @@ tasks.register("downloadOpenCV") {
             println("Downloading opencv-mobile ${opencvMobileVersion} for Android...")
             
             // Correct URL format: /releases/download/vVERSION/
-            val zipUrl = "https://github.com/nihui/opencv-mobile/releases/download/v${opencvMobileVersion}/opencv-mobile-${opencvMobileVersion}-android.zip"
+            val zipUrl = "https://github.com/nihui/opencv-mobile/releases/download/${opencvMobileReleaseTag}/opencv-mobile-${opencvMobileVersion}-android.zip"
             val zipFile = file("${opencvDir}/opencv-mobile-android.zip")
             
             try {
