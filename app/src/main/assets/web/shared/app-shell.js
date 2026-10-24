@@ -1069,7 +1069,7 @@
     // either the saved selection or the normal fallback.
     var vehicleSelectionWaiters = [];
     var FALLBACK_MODEL_ID = 'seal';
-    var FALLBACK_MODEL_COLOR = '#E8E8EC';
+    var FALLBACK_MODEL_COLOR = '#9A9EA5';   // fork: grey
 
     function setEvCardAppearance(modelId, hexColor) {
         // Forward the user's selection to the 3D card. ev-card-3d.js

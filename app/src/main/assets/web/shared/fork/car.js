@@ -16,7 +16,7 @@
 (function () {
     'use strict';
 
-    var CAR_NAME_DEFAULT = 'BYD Seal 05';
+    var CAR_NAME_DEFAULT = 'BYD Seal 05 DM-i';
     var NAME_KEY = 'od.car.name';          // localStorage override for the hero title
     var STATE_POLL_MS = 10000;
     var CLOUD_POLL_MS = 60000;
@@ -29,7 +29,7 @@
         soc: null, rangeKm: null, odoKm: null, trunkOpen: null, windows: {},
         cloud: { configured: false, localKey: false }, cloudLock: null,
         gps: null, charging: null, vin: '',
-        modelId: 'seal', color: '#1A1A1E', modelName: '', displayName: '',
+        modelId: 'seal', color: '#9A9EA5', modelName: '', displayName: '',
         armed: {}, climateTimers: {}
     };
     var hero3d = null;
@@ -303,7 +303,8 @@
             }
             var custom = null;
             try { custom = localStorage.getItem(NAME_KEY); } catch (e) {}
-            S.displayName = custom || (S.modelId === 'seal' ? CAR_NAME_DEFAULT : (S.modelName || CAR_NAME_DEFAULT));
+            var isOurCar = S.modelId === 'seal';
+            S.displayName = custom || (isOurCar ? CAR_NAME_DEFAULT : (S.modelName || CAR_NAME_DEFAULT));
             setText('carName', S.displayName);
             if (hero3d) { hero3d.setModel(S.modelId); hero3d.setColor(S.color); } else initHero3d();
             renderFooter();
@@ -492,6 +493,7 @@
         refreshCloudLock();
         refreshVin();
         pickStatus();
+        setTimeout(pickStatus, 1500);   // core.js' first /status poll lands shortly after boot
         setInterval(refreshState, STATE_POLL_MS);
         setInterval(refreshCloud, CLOUD_POLL_MS);
         setInterval(refreshCloudLock, CLOUD_LOCK_POLL_MS);

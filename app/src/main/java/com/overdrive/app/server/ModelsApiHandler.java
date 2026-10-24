@@ -300,7 +300,7 @@ public class ModelsApiHandler {
         response.put("selectedModelId",
                 selectedModelId != null ? selectedModelId : JSONObject.NULL);
         response.put("modelSource", modelSource);
-        response.put("color", vehicle.optString("color", "#E8E8EC"));
+        response.put("color", vehicle.optString("color", "#9A9EA5"));   // fork: grey default
         // driveSide controls which front-axis door each BYD HAL area code
         // labels as "Front-left" vs "Front-right" in notifications. The
         // notifications page reads this field to paint the LHD/RHD picker.

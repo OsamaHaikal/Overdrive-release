@@ -163,7 +163,7 @@ public final class LauncherApiHandler {
             String modelId = v.optString("modelId", "seal");
             JSONObject o = new JSONObject();
             o.put("modelId", modelId);
-            o.put("color", v.optString("color", "#E8E8EC"));
+            o.put("color", v.optString("color", "#9A9EA5"));
             o.put("driveSide", v.optString("driveSide", "rhd"));
             JSONObject model = findManifestModel(modelId);
             if (model != null) {

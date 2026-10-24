@@ -1186,7 +1186,7 @@ object UnifiedConfigManager {
         if (!vehicle.has("assistOffLda")) vehicle.put("assistOffLda", false)
         if (!vehicle.has("assistOffElka")) vehicle.put("assistOffElka", false)
         if (!vehicle.has("assistOffDms")) vehicle.put("assistOffDms", false)
-        if (!vehicle.has("color")) vehicle.put("color", "#E8E8EC")  // Aurora White
+        if (!vehicle.has("color")) vehicle.put("color", "#9A9EA5")  // fork: grey
 
         // Geocoding (place-name tagging) defaults — opt-in, fully offline by
         // default so the upgrade is non-surprising for existing users.
@@ -3375,9 +3375,9 @@ object UnifiedConfigManager {
             return stored
         }
         return JSONObject().apply {
-            put("modelId", if (isDilink5Selected(config)) "sealion7" else "seal")
+            put("modelId", "seal")   // fork: Seal body for the Seal 05 DM-i (bundled)
             put("modelSource", VehicleModelSelection.SOURCE_UNSET)
-            put("color", "#E8E8EC")
+            put("color", "#9A9EA5")   // fork: grey
             put("driveSide", "rhd")
         }
     }
