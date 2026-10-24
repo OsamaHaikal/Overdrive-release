@@ -65,6 +65,8 @@
 
         // ===== Vehicle ===== — control + trip history.
         { divider: true, label: 'Vehicle', i18n: 'nav.vehicle_group' },
+        // Fork: premium phone-first control page (web/local/car.html).
+        { href: 'car.html',             i18n: 'nav.car',             label: 'My Car',          svg: '<path d="M5 17H3v-5l2.2-5.1A2 2 0 0 1 7 5.7h10a2 2 0 0 1 1.8 1.2L21 12v5h-2M3 12h18"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/><path d="M12 2v2"/>' },
         { href: 'vehicle-control.html', i18n: 'nav.vehicle_control', label: 'Vehicle Control', svg: '<path d="M5 17H3v-5l2.2-5.1A2 2 0 0 1 7 5.7h10a2 2 0 0 1 1.8 1.2L21 12v5h-2M3 12h18M9.5 17h5"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/>' },
         { href: 'remote-access.html',   i18n: 'nav.remote_access',   label: 'Proximity', svg: '<path d="M4.9 19.1a10 10 0 0 1 0-14.2M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4M19.1 4.9a10 10 0 0 1 0 14.2"/><circle cx="12" cy="12" r="2"/>' },
         { href: 'trips.html',           i18n: 'nav.trips',           label: 'Trips',           svg: '<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>' },

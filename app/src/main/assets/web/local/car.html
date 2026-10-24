@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title data-i18n="car.page_title">My Car — OverDrive</title>
+    <link rel="icon" type="image/webp" href="../shared/app-icon-dark.webp">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="../shared/app-icon-dark.webp">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0E1311">
+    <script src="../shared/theme.js?v=11"></script>
+    <script src="../shared/app-shell.js?v=18"></script>
+    <link rel="stylesheet" href="../shared/styles.css?v=38">
+    <link rel="stylesheet" href="../shared/revamp.css?v=2">
+    <link rel="stylesheet" href="../shared/fork/car.css?v=1">
+</head>
+<body class="r-settings car-page">
+    <div class="app-layout">
+        <div id="app-shell-mount"></div>
+        <main class="main-content">
+            <div class="mobile-header">
+                <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Menu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
+                    </svg>
+                </button>
+                <span style="font-weight:600;" data-i18n="nav.car">My Car</span>
+                <div style="width:40px;"></div>
+            </div>
+
+            <div class="page-body car-wrap">
+                <!-- ===== HERO ===== -->
+                <section class="car-hero">
+                    <div class="car-hero-top">
+                        <div>
+                            <h1 class="car-name" id="carName">BYD Seal 05</h1>
+                            <div class="car-sub">
+                                <span class="car-batt-pill"><span class="car-batt-icon"><span class="car-batt-fill" id="carBattFill"></span></span><span id="carBatt">--%</span></span>
+                                <span id="carRange">-- km</span>
+                            </div>
+                            <div class="car-state" id="carState" data-i18n="car.connecting">Connecting…</div>
+                        </div>
+                        <a class="car-avatar" href="byd-cloud.html" aria-label="BYD Cloud account">
+                            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </a>
+                    </div>
+                    <div class="car-stage">
+                        <canvas id="carHeroCanvas" aria-hidden="true"></canvas>
+                        <div class="car-stage-shadow"></div>
+                    </div>
+                    <div class="car-quick">
+                        <button type="button" class="car-qa" id="qaLock">
+                            <svg class="ico-locked" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                            <svg class="ico-unlocked" viewBox="0 0 24 24" style="display:none"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.6-1.7"/></svg>
+                            <span data-i18n="car.lock">Lock</span>
+                        </button>
+                        <button type="button" class="car-qa" id="qaClimate">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2"/><path d="M12 9.8c0-3.4 1.6-6.3 3.8-6.3 1.6 0 2.4 1.6 1.4 2.8L13.9 10M14.2 12c3.4 0 6.3 1.6 6.3 3.8 0 1.6-1.6 2.4-2.8 1.4L14 13.9M12 14.2c0 3.4-1.6 6.3-3.8 6.3-1.6 0-2.4-1.6-1.4-2.8L10.1 14M9.8 12c-3.4 0-6.3-1.6-6.3-3.8 0-1.6 1.6-2.4 2.8-1.4L10 10.1"/></svg>
+                            <span data-i18n="car.climate">Climate</span>
+                        </button>
+                        <button type="button" class="car-qa" id="qaFlash">
+                            <svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+                            <span data-i18n="car.flash">Flash</span>
+                        </button>
+                        <button type="button" class="car-qa" id="qaFind">
+                            <svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3z"/><path d="M16 9a4 4 0 0 1 0 6M19 6.5a8 8 0 0 1 0 11"/></svg>
+                            <span data-i18n="car.find">Find</span>
+                        </button>
+                        <button type="button" class="car-qa" id="qaTrunk">
+                            <svg viewBox="0 0 24 24"><path d="M3 17v-5l2.3-5.2A2 2 0 0 1 7.1 5.6h9.8a2 2 0 0 1 1.8 1.2L21 12v5"/><path d="M3 17h18M7.5 12h9"/><circle cx="7.5" cy="17" r="1.6"/><circle cx="16.5" cy="17" r="1.6"/></svg>
+                            <span data-i18n="car.trunk">Trunk</span>
+                        </button>
+                    </div>
+                </section>
+
+                <div class="car-cloud-hint" id="carCloudHint" hidden>
+                    <span data-i18n="car.cloud_hint">Remote commands need a BYD Cloud account.</span>
+                    <a href="byd-cloud.html" data-i18n="car.cloud_setup">Set up</a>
+                </div>
+
+                <!-- ===== LIST ===== -->
+                <section class="car-list">
+                    <button type="button" class="car-row" data-panel="panelControls" aria-expanded="false">
+                        <span class="car-row-ico"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>
+                        <span class="car-row-main">
+                            <span class="car-row-title" data-i18n="car.controls">Controls</span>
+                            <span class="car-row-sub" id="controlsSub">Windows · Sunshade · Trunk</span>
+                        </span>
+                        <span class="car-row-chev"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
+                    </button>
+                    <div class="car-panel" id="panelControls">
+                        <div class="car-panel-inner">
+                            <div class="car-group-label" data-i18n="car.windows">Windows</div>
+                            <div class="car-pills">
+                                <button type="button" class="car-pill" id="ctlWinClose" data-i18n="car.close_all">Close all</button>
+                                <button type="button" class="car-pill" id="ctlWinVent" data-i18n="car.vent">Vent</button>
+                            </div>
+                            <div class="car-group-label" data-i18n="car.sunshade">Sunshade</div>
+                            <div class="car-pills">
+                                <button type="button" class="car-pill" id="ctlShadeOpen" data-i18n="car.open_cmd">Open</button>
+                                <button type="button" class="car-pill" id="ctlShadeClose" data-i18n="car.close_cmd">Close</button>
+                            </div>
+                            <div class="car-group-label" data-i18n="car.sunroof">Sunroof</div>
+                            <div class="car-pills">
+                                <button type="button" class="car-pill" id="ctlRoofOpen" data-i18n="car.open_cmd">Open</button>
+                                <button type="button" class="car-pill" id="ctlRoofClose" data-i18n="car.close_cmd">Close</button>
+                            </div>
+                            <div class="car-group-label" data-i18n="car.trunk">Trunk</div>
+                            <div class="car-pills">
+                                <button type="button" class="car-pill" id="ctlTrunkOpen" data-i18n="car.open_cmd">Open</button>
+                                <button type="button" class="car-pill" id="ctlTrunkClose" data-i18n="car.close_cmd">Close</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="car-row" data-panel="panelClimate" aria-expanded="false">
+                        <span class="car-row-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2"/><path d="M12 9.8c0-3.4 1.6-6.3 3.8-6.3 1.6 0 2.4 1.6 1.4 2.8L13.9 10M14.2 12c3.4 0 6.3 1.6 6.3 3.8 0 1.6-1.6 2.4-2.8 1.4L14 13.9M12 14.2c0 3.4-1.6 6.3-3.8 6.3-1.6 0-2.4-1.6-1.4-2.8L10.1 14M9.8 12c-3.4 0-6.3-1.6-6.3-3.8 0-1.6 1.6-2.4 2.8-1.4L10 10.1"/></svg></span>
+                        <span class="car-row-main">
+                            <span class="car-row-title" data-i18n="car.climate">Climate</span>
+                            <span class="car-row-sub" id="climateSub">--</span>
+                        </span>
+                        <span class="car-row-chev"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
+                    </button>
+                    <div class="car-panel" id="panelClimate">
+                        <div class="car-panel-inner">
+                            <div class="car-stepper">
+                                <button type="button" class="car-stepper-btn" id="climTempDown" aria-label="Cooler">−</button>
+                                <div class="car-stepper-val"><span id="climTemp">22</span><small>°C</small></div>
+                                <button type="button" class="car-stepper-btn" id="climTempUp" aria-label="Warmer">+</button>
+                            </div>
+                            <div class="car-kv"><span data-i18n="car.fan">Fan</span><b><button type="button" class="car-pill" id="climFanDown" aria-label="Fan down" style="min-height:36px;padding:6px 14px;">−</button> <span id="climFan">3</span> <button type="button" class="car-pill" id="climFanUp" aria-label="Fan up" style="min-height:36px;padding:6px 14px;">+</button></b></div>
+                            <div class="car-pills">
+                                <button type="button" class="car-pill is-primary" id="climPower" data-i18n="car.turn_on">Turn on</button>
+                            </div>
+                            <div class="car-kv" id="climRemoteNote" hidden><span data-i18n="car.remote_note">Remote sessions run for 20 minutes when the car is asleep.</span></div>
+                        </div>
+                    </div>
+
+                    <a class="car-row" id="rowLocation" target="_blank" rel="noopener">
+                        <span class="car-row-ico"><svg viewBox="0 0 24 24"><path d="M12 2 4 20l8-4 8 4z"/></svg></span>
+                        <span class="car-row-main">
+                            <span class="car-row-title" data-i18n="car.location">Location</span>
+                            <span class="car-row-sub" id="locationSub">--</span>
+                        </span>
+                        <span class="car-row-chev"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
+                    </a>
+
+                    <button type="button" class="car-row" data-panel="panelCharging" aria-expanded="false">
+                        <span class="car-row-ico"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/><path d="m12 9-2 3h3l-2 3"/></svg></span>
+                        <span class="car-row-main">
+                            <span class="car-row-title" data-i18n="car.charging_title">Charging</span>
+                            <span class="car-row-sub" id="chargingSub">--</span>
+                        </span>
+                        <span class="car-row-chev"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
+                    </button>
+                    <div class="car-panel" id="panelCharging">
+                        <div class="car-panel-inner">
+                            <div class="car-soc"><i id="chargeSoc"></i></div>
+                            <div class="car-kv"><span data-i18n="car.battery">Battery</span><b id="chargeSocTxt">--</b></div>
+                            <div class="car-kv"><span data-i18n="car.range">Range</span><b id="chargeRange">--</b></div>
+                            <div class="car-kv"><span data-i18n="car.status">Status</span><b id="chargeState">--</b></div>
+                            <div class="car-pills"><a class="car-pill" href="charging.html" data-i18n="car.charging_settings">Charging settings</a></div>
+                        </div>
+                    </div>
+
+                    <a class="car-row" href="surveillance.html">
+                        <span class="car-row-ico"><svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.5 9.3 8 11 4.5-1.7 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></svg></span>
+                        <span class="car-row-main">
+                            <span class="car-row-title" data-i18n="car.security">Security</span>
+                            <span class="car-row-sub" data-i18n="car.security_sub">Sentry mode · Recordings</span>
+                        </span>
+                        <span class="car-row-chev"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
+                    </a>
+
+                    <a class="car-row" href="vehicle-control.html">
+                        <span class="car-row-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+                        <span class="car-row-main">
+                            <span class="car-row-title" data-i18n="car.all_controls">All controls</span>
+                            <span class="car-row-sub" data-i18n="car.all_controls_sub">Seats, lights, ADAS, schedules</span>
+                        </span>
+                        <span class="car-row-chev"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
+                    </a>
+                </section>
+
+                <footer class="car-foot">
+                    <div class="car-foot-model" id="footModel">Seal 05</div>
+                    <div class="car-foot-line" id="footTrim">DM-i</div>
+                    <div class="car-foot-meta" id="footOdo"></div>
+                    <div class="car-foot-meta" id="footVin"></div>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="../shared/auth.js?v=12"></script>
+    <script src="../shared/pwa-init.js?v=index1"></script>
+    <script src="../shared/core.js?v=24"></script>
+    <script src="../shared/ev-card-3d.js?v=3" data-overdrive-ev-card-3d></script>
+    <script src="../shared/fork/car.js?v=1"></script>
+</body>
+</html>
