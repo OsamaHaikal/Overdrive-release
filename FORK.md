@@ -13,6 +13,8 @@ Upstream is MIT; this fork keeps the licence and credits.
 | Build | opencv-mobile download URL fixed (upstream URL 404s on a clean clone). | `app/build.gradle.kts` |
 | CI | Signed release build + GitHub release on every push to `main`. | `.github/workflows/build.yml` |
 | My Car page | Phone-first premium control page (Tesla-app style): 3D hero, lock/climate/flash/find/trunk quick actions, windows/sunshade/sunroof, climate steppers, location, charging. Uses only existing endpoints. Sidebar entry "My Car". | `web/local/car.html`, `web/shared/fork/car.css`, `web/shared/fork/car.js`, `web/shared/app-shell.js` (one nav line), `web/i18n/{en,ar}.json` |
+| Theme | Neutral palette (zinc greys, blue accent, no green), light by default, true-black dark, Inter, compact size tokens. One `@import` added at the end of `styles.css`; everything else lives in the fork file. `styles.css?v=` bumped so caches refresh. | `web/shared/fork/theme.css`, `web/shared/styles.css`, `web/shared/theme.js` (default light), `server/QualitySettingsApiHandler.java` (default light), `web/local/*.html` (theme-color + css version) |
+| Defaults | Default 3D model `seal` (closest body to the Seal 05 DM-i), default paint silver-grey `#9A9EA5`. | `config/UnifiedConfigManager.kt`, `server/ModelsApiHandler.java`, `server/LauncherApiHandler.java`, `web/shared/app-shell.js` |
 | Resources | Vector placeholders for the four `google_maps_logo_*` drawables upstream references but never committed (`*.png` is gitignored); without them `processReleaseResources` fails on a clean clone. | `res/drawable/google_maps_logo_*.xml` |
 
 Unverified assumption: for Ocean cars the BrandFlag header and MQTT prefix are

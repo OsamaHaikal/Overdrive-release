@@ -1,0 +1,192 @@
+/*
+ * Fork theme — neutral, high-contrast palette in the spirit of the Tesla app.
+ * Light is the default; dark is true-neutral black. Overrides the Material-3
+ * tonal tokens from design-tokens.css (same selectors, imported later from
+ * styles.css, so these win). Legacy aliases (--bg-base, --text-primary, …)
+ * resolve through these tokens, so every page and the app shell follow.
+ */
+@import url("https://rsms.me/inter/inter.css");
+
+:root {
+    --family-sans: "InterVariable", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --tracking-display: -0.02em;
+    --tracking-headline: -0.015em;
+    --tracking-title: -0.01em;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+    --radius-tile: 16px;
+
+    /* ── Dark (true neutral) ─────────────────────────────────────── */
+    --primary: #8AA4FF;
+    --on-primary: #0B1A4A;
+    --primary-container: rgba(138, 164, 255, 0.16);
+    --on-primary-container: #C9D6FF;
+    --secondary: #A1A1AA;
+    --on-secondary: #18181B;
+    --secondary-container: #27272A;
+    --on-secondary-container: #E4E4E7;
+    --tertiary: #7DD3FC;
+    --on-tertiary: #082F49;
+    --tertiary-container: rgba(125, 211, 252, 0.16);
+    --on-tertiary-container: #BAE6FD;
+    --error: #F87171;
+    --on-error: #450A0A;
+    --error-container: rgba(248, 113, 113, 0.16);
+    --on-error-container: #FECACA;
+    --background: #09090B;
+    --on-background: #FAFAFA;
+    --surface: #09090B;
+    --on-surface: #FAFAFA;
+    --surface-variant: #27272A;
+    --on-surface-variant: #A1A1AA;
+    --surface-dim: #09090B;
+    --surface-bright: #27272A;
+    --surface-container-lowest: #000000;
+    --surface-container-low: #111113;
+    --surface-container: #18181B;
+    --surface-container-high: #27272A;
+    --surface-container-highest: #3F3F46;
+    --outline: #71717A;
+    --outline-variant: rgba(255, 255, 255, 0.10);
+    --inverse-surface: #FAFAFA;
+    --inverse-on-surface: #18181B;
+    --inverse-primary: #3B5BDB;
+    --scrim: #000000;
+    --status-success: #4ADE80;
+    --status-warning: #FBBF24;
+    --status-danger: #F87171;
+    --status-info: #60A5FA;
+    --status-success-container: rgba(74, 222, 128, 0.14);
+    --status-warning-container: rgba(251, 191, 36, 0.14);
+    --status-danger-container: rgba(248, 113, 113, 0.14);
+    --status-info-container: rgba(96, 165, 250, 0.14);
+
+    /* Dark mode carries no shadows; definition comes from hairlines. */
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+    --tile: var(--surface-container);
+    --tile-raised: var(--surface-container-high);
+    --well: var(--surface-container);
+    --well-2: var(--surface-container-high);
+    --hairline: rgba(255, 255, 255, 0.08);
+    --sheen: rgba(255, 255, 255, 0.03);
+    --tile-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    --bar: rgba(9, 9, 11, 0.94);
+    --bar-blur: rgba(9, 9, 11, 0.72);
+    --state-hover: rgba(250, 250, 250, 0.06);
+    --state-press: rgba(250, 250, 250, 0.12);
+    --primary-soft: rgba(138, 164, 255, 0.14);
+    --primary-glow: rgba(138, 164, 255, 0.28);
+    --tertiary-soft: rgba(125, 211, 252, 0.12);
+    --warning-soft: rgba(251, 191, 36, 0.14);
+    --danger-soft: rgba(248, 113, 113, 0.14);
+    --glow-a: rgba(138, 164, 255, 0.08);
+    --glow-b: rgba(125, 211, 252, 0.05);
+    --page: var(--background);
+}
+
+:root[data-theme="light"] {
+    --primary: #2F5BD9;
+    --on-primary: #FFFFFF;
+    --primary-container: rgba(47, 91, 217, 0.10);
+    --on-primary-container: #1E3FA8;
+    --secondary: #52525B;
+    --on-secondary: #FFFFFF;
+    --secondary-container: #F4F4F5;
+    --on-secondary-container: #18181B;
+    --tertiary: #0369A1;
+    --on-tertiary: #FFFFFF;
+    --tertiary-container: rgba(3, 105, 161, 0.10);
+    --on-tertiary-container: #0C4A6E;
+    --error: #DC2626;
+    --on-error: #FFFFFF;
+    --error-container: rgba(220, 38, 38, 0.10);
+    --on-error-container: #991B1B;
+    --background: #FFFFFF;
+    --on-background: #09090B;
+    --surface: #FFFFFF;
+    --on-surface: #09090B;
+    --surface-variant: #E4E4E7;
+    --on-surface-variant: #52525B;
+    --surface-dim: #F4F4F5;
+    --surface-bright: #FFFFFF;
+    --surface-container-lowest: #FFFFFF;
+    --surface-container-low: #FAFAFA;
+    --surface-container: #F4F4F5;
+    --surface-container-high: #E4E4E7;
+    --surface-container-highest: #D4D4D8;
+    --outline: #71717A;
+    --outline-variant: rgba(9, 9, 11, 0.08);
+    --inverse-surface: #18181B;
+    --inverse-on-surface: #FAFAFA;
+    --inverse-primary: #8AA4FF;
+    --scrim: #000000;
+    --status-success: #15803D;
+    --status-warning: #B45309;
+    --status-danger: #DC2626;
+    --status-info: #2563EB;
+    --status-success-container: rgba(21, 128, 61, 0.10);
+    --status-warning-container: rgba(180, 83, 9, 0.10);
+    --status-danger-container: rgba(220, 38, 38, 0.10);
+    --status-info-container: rgba(37, 99, 235, 0.10);
+
+    --shadow-sm: 0 1px 2px rgba(9, 9, 11, 0.05);
+    --shadow-md: 0 4px 12px rgba(9, 9, 11, 0.08);
+    --shadow-lg: 0 8px 32px rgba(9, 9, 11, 0.10);
+    --tile: #FFFFFF;
+    --tile-raised: #FFFFFF;
+    --well: #FAFAFA;
+    --well-2: #F4F4F5;
+    --hairline: rgba(9, 9, 11, 0.08);
+    --sheen: rgba(255, 255, 255, 0);
+    --tile-shadow: 0 0 0 1px rgba(9, 9, 11, 0.06), 0 1px 2px rgba(9, 9, 11, 0.04);
+    --bar: rgba(255, 255, 255, 0.95);
+    --bar-blur: rgba(255, 255, 255, 0.76);
+    --state-hover: rgba(9, 9, 11, 0.04);
+    --state-press: rgba(9, 9, 11, 0.08);
+    --primary-soft: rgba(47, 91, 217, 0.10);
+    --primary-glow: rgba(47, 91, 217, 0.22);
+    --tertiary-soft: rgba(3, 105, 161, 0.08);
+    --warning-soft: rgba(180, 83, 9, 0.10);
+    --danger-soft: rgba(220, 38, 38, 0.08);
+    --glow-a: rgba(47, 91, 217, 0.05);
+    --glow-b: rgba(3, 105, 161, 0.04);
+    --page: #FFFFFF;
+}
+
+body {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Density: compact scale (user preference) ───────────────────── */
+:root {
+    --fs-caption: 11px;
+    --fs-label: 12px;
+    --fs-body: 14px;
+    --fs-title: 15px;
+    --fs-headline: 18px;
+    --fs-display: 24px;
+    --fs-hero: 38px;
+    --page-pad-x: 16px;
+    --page-pad-y: 12px;
+    --card-gap: 10px;
+    --card-pad: 14px;
+    --card-pad-hero: 16px;
+    --tile-min-h: 88px;
+    --target: 40px;
+    --target-lg: 44px;
+    --sp-5: 16px;
+    --sp-6: 20px;
+    --sp-8: 24px;
+    --sp-10: 32px;
+    --sp-12: 40px;
+}
+@media (min-width: 768px) {
+    html { font-size: 15px; }
+}

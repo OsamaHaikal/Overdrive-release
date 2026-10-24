@@ -188,7 +188,7 @@ public class QualitySettingsApiHandler {
         JSONObject app = com.overdrive.app.config.UnifiedConfigManager.getAppearance();
         JSONObject response = new JSONObject();
         response.put("success", true);
-        response.put("theme", app.optString("theme", "dark"));
+        response.put("theme", app.optString("theme", "light"));   // fork: light by default
         response.put("locale", app.optString("locale", "auto"));
         HttpResponse.sendJson(out, response.toString());
     }

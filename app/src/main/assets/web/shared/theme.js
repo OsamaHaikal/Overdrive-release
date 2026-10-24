@@ -23,7 +23,7 @@
 (function () {
     'use strict';
     var STORAGE_KEY = 'overdrive_theme';
-    var DEFAULT_THEME = 'dark';
+    var DEFAULT_THEME = 'light';   // fork: light by default
 
     // Direction has to be on <html> before the stylesheet, same as the theme.
     // core.js only sets dir after the language file arrives, so every Hebrew
