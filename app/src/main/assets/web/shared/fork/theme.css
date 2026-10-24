@@ -7,7 +7,7 @@
  */
 @import url("https://rsms.me/inter/inter.css");
 
-:root {
+html:root {
     --family-sans: "InterVariable", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --tracking-display: -0.02em;
     --tracking-headline: -0.015em;
@@ -89,7 +89,7 @@
     --page: var(--background);
 }
 
-:root[data-theme="light"] {
+html:root[data-theme="light"] {
     --primary: #2F5BD9;
     --on-primary: #FFFFFF;
     --primary-container: rgba(47, 91, 217, 0.10);
@@ -165,7 +165,7 @@ body {
 }
 
 /* ── Density: compact scale (user preference) ───────────────────── */
-:root {
+html:root {
     --fs-caption: 11px;
     --fs-label: 12px;
     --fs-body: 14px;
@@ -188,5 +188,17 @@ body {
     --sp-12: 40px;
 }
 @media (min-width: 768px) {
-    html { font-size: 15px; }
+    html:root { font-size: 15px; }
 }
+/* Keep the head unit's larger embed sizes (design-tokens.css [data-android-embed]). */
+html:root[data-android-embed="1"] {
+    --fs-caption: 13px; --fs-label: 14px; --fs-body: 16px; --fs-title: 19px;
+    --fs-headline: 24px; --fs-display: 36px; --target: 56px; --target-lg: 64px;
+}
+
+/* ── No-green brand bits ────────────────────────────────────────── */
+/* The bundled app icon is a green glyph; render it monochrome in the shell. */
+.sidebar .brand-logo img,
+.mobile-header img[src*="app-icon"] { filter: grayscale(1) contrast(1.05); }
+/* Decorative "alive" dot next to the logo: neutral instead of green. */
+.sidebar .brand-online-pulse { background: var(--outline); }

@@ -33,6 +33,17 @@
         armed: {}, climateTimers: {}
     };
     var hero3d = null;
+    var heroPhotoReady = false;
+    // Prefer the photo of the actual car; only spin up the 3D model if it is missing.
+    function initHeroPhoto() {
+        var img = $('carHeroPhoto'), stage = $('carStage');
+        if (!img || !stage) return;
+        var show = function () { heroPhotoReady = true; stage.classList.add('has-photo'); if (hero3d) { try { hero3d.dispose(); } catch (e) {} hero3d = null; } };
+        var fail = function () { heroPhotoReady = false; stage.classList.remove('has-photo'); initHero3d(); };
+        if (img.complete && img.naturalWidth > 0) { show(); return; }
+        if (img.complete && img.naturalWidth === 0) { fail(); return; }
+        img.addEventListener('load', show); img.addEventListener('error', fail);
+    }
 
     // ── helpers ──────────────────────────────────────────────────────────
     function $(id) { return document.getElementById(id); }
@@ -280,6 +291,7 @@
     function initHero3d() {
         var canvas = $('carHeroCanvas');
         if (!canvas || hero3d || typeof window.OverdriveEvCard3D !== 'function') return;
+        if (heroPhotoReady) return;   // the real car's photo is showing; skip the WebGL context
         try {
             hero3d = new window.OverdriveEvCard3D(canvas, { view: 'three-quarter' });
             hero3d.setModel(S.modelId);
@@ -487,6 +499,7 @@
 
     function boot() {
         bindActions();
+        initHeroPhoto();
         loadModel();
         refreshCloud();
         refreshState();

@@ -42,6 +42,8 @@ black; everything else works.
 
 ## My Car page notes
 
+- The hero shows a cut-out photo of the real car: `web/shared/fork/car-hero.webp` (transparent WebP, ~1600 px wide,
+  no licence plate). Replace that file to change the picture; if it is missing the page falls back to the 3D model.
 - Hero title defaults to "BYD Seal 05" when the selected 3D model is `seal`; override it from the browser console with
   `localStorage.setItem('od.car.name', 'Your name')`.
 - Trunk on the quick row needs a second tap within 3 s (it physically opens the car). Everything else fires on one tap.

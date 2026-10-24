@@ -2,7 +2,10 @@
    Owned by the fork. Neutral tokens come from shared/fork/theme.css; this file
    only lays the page out. Logical properties keep it RTL-safe. */
 .car-page .main-content { padding-bottom: 48px; }
-.car-wrap { max-width: 640px; margin: 0 auto; }
+/* .page-body is a column-flex item; an explicit width keeps `margin: auto` from
+   shrinking it to the widest text run. */
+/* Specificity must beat revamp.css' `html:not([data-android-embed]) .main-content > .page-body { max-width: 1440px }`. */
+.car-page .main-content > .page-body.car-wrap { width: 100%; max-width: 640px; margin-inline: auto; }
 
 /* ── Hero ─────────────────────────────────────────────────────────── */
 .car-hero { position: relative; padding-top: 8px; }
@@ -29,6 +32,10 @@
     background: radial-gradient(ellipse at 50% 62%, var(--surface-container-high), transparent 70%); opacity: .9; }
 :root[data-theme="dark"] .car-stage::before { background: radial-gradient(ellipse at 50% 62%, rgba(255, 255, 255, 0.07), transparent 70%); }
 .car-stage canvas { position: relative; display: block; width: 100%; height: 100%; }
+.car-stage-photo { position: absolute; inset: 4% 4% 10%; width: 92%; height: 86%; object-fit: contain; object-position: center bottom; display: none; }
+.car-stage.has-photo .car-stage-photo { display: block; }
+.car-stage.has-photo canvas { display: none; }
+.car-stage.has-photo .car-stage-shadow { bottom: 6%; left: 14%; right: 14%; }
 .car-stage-shadow { position: absolute; left: 20%; right: 20%; bottom: 13%; height: 26px; border-radius: 50%; pointer-events: none;
     background: radial-gradient(ellipse, rgba(9, 9, 11, 0.28), transparent 70%); }
 :root[data-theme="dark"] .car-stage-shadow { background: radial-gradient(ellipse, rgba(0, 0, 0, 0.6), transparent 70%); }
