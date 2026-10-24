@@ -141,6 +141,23 @@
                             <span class="md-supporting" id="bydRegionDerived" data-i18n="byd_cloud.region_derived_default">Selected automatically from country code.</span>
                         </div>
 
+                        <!-- Fork: CN brand identity (targetBrand / BrandFlag). Only
+                             meaningful on the mainland-China stack; BydCloud.setRegionDisplay
+                             shows it when the derived region is "cn". -->
+                        <div class="md-field" id="bydCnBrandField" style="display:none;">
+                            <div class="md-field-box">
+                                <select class="md-input" id="bydCnBrand">
+                                    <option value="dynasty" data-i18n="byd_cloud.cn_brand_dynasty">王朝 Dynasty (BYD Auto app)</option>
+                                    <option value="ocean" data-i18n="byd_cloud.cn_brand_ocean">海洋 Ocean (Seal, Dolphin, Sealion…)</option>
+                                    <option value="denza" data-i18n="byd_cloud.cn_brand_denza">腾势 Denza</option>
+                                    <option value="yangwang" data-i18n="byd_cloud.cn_brand_yangwang">仰望 Yangwang</option>
+                                    <option value="fangchengbao" data-i18n="byd_cloud.cn_brand_fangchengbao">方程豹 Fangchengbao</option>
+                                </select>
+                                <label class="md-label" for="bydCnBrand" data-i18n="byd_cloud.cn_brand">China app brand</label>
+                            </div>
+                            <span class="md-supporting" data-i18n="byd_cloud.cn_brand_supporting">Pick the BYD app family your car is bound to. Seal-series cars are usually Ocean (海洋).</span>
+                        </div>
+
                         <!-- Email -->
                         <div class="md-field">
                             <div class="md-field-box">
@@ -288,7 +305,7 @@
     <script src="../shared/settings-hydration.js?v=1"></script>
     <script src="../shared/update-flow.js?v=3"></script>
     <!-- BydCloud module + SurvSettings stubs live in surveillance.js. -->
-    <script src="../shared/surveillance.js?v=survtoggle15"></script>
+    <script src="../shared/surveillance.js?v=survtoggle15-cnbrand1"></script>
     <script>
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');

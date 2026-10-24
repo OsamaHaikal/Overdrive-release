@@ -187,7 +187,7 @@ public final class BydCloudTransport {
             requestBuilder
                     .addHeader("version", BydCloudConfig.CN_APP_INNER_VERSION)
                     .addHeader("platform", "ANDROID")
-                    .addHeader("BrandFlag", BydCloudConfig.CN_BRAND_FLAG);
+                    .addHeader("BrandFlag", config.cnBrandFlag);
         }
         Request request = requestBuilder.build();
 

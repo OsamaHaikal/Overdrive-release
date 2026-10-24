@@ -31,6 +31,8 @@ public final class BydCloudConfig {
     public static final String CN_VEHICLE_BRAND = "1";
     public static final String CN_NETWORK_OPERATOR = "无"; // 无
     public static final String CN_BRAND_FLAG = "dynasty";
+    /** Fork: default CN brand when bydCloud.cnBrand is unset (matches upstream's hardcoded Dynasty). */
+    public static final String CN_DEFAULT_BRAND = "dynasty";
 
     public final boolean enabled;
     public final String username;
@@ -47,11 +49,19 @@ public final class BydCloudConfig {
     public final String appVersion;
     public final boolean cloudDataMerge; // Toggle: merge cloud telemetry into vehicle data
     public final String energyType;      // From vehicle list: PHEV/BEV identifier
+    // Fork: CN brand identity. Upstream hardcodes targetBrand=1/BrandFlag=dynasty
+    // (王朝). A Seal-family car lives in the Ocean (海洋) app, so the brand is
+    // read from bydCloud.cnBrand (dynasty|ocean|denza|yangwang|fangchengbao or
+    // the numeric code 1..5). The static CN_* constants stay as the defaults.
+    public final String cnBrand;         // canonical name
+    public final String cnTargetBrand;   // "1".."5" (targetBrand)
+    public final String cnVehicleBrand;  // same code (vehicleBrand)
+    public final String cnBrandFlag;     // BrandFlag header + MQTT client-id prefix / topic root
 
     private BydCloudConfig(boolean enabled, String username, String loginKey,
                            String signPassword, String commandPwd, String rawPassword,
                            String vin, String countryCode, String language, String region,
-                           boolean cloudDataMerge, String energyType) {
+                           boolean cloudDataMerge, String energyType, String cnBrand) {
         this.enabled = enabled;
         this.username = username;
         this.loginKey = loginKey;
@@ -75,6 +85,10 @@ public final class BydCloudConfig {
         this.region = BydCloudRegionCatalog.regionForCountryCode(this.countryCode);
         this.cloudDataMerge = cloudDataMerge;
         this.energyType = energyType != null ? energyType : "";
+        this.cnBrand = normalizeCnBrand(cnBrand);
+        this.cnTargetBrand = resolveCnBrandCode(this.cnBrand);
+        this.cnVehicleBrand = this.cnTargetBrand;
+        this.cnBrandFlag = this.cnBrand;
         // Device fingerprint derived from username (matches Niek/BYD-re)
         this.imeiMd5 = (username != null && !username.isEmpty())
                 ? com.overdrive.app.byd.cloud.crypto.BydCryptoUtils.md5Hex(username)
@@ -107,7 +121,7 @@ public final class BydCloudConfig {
             return new BydCloudConfig(false, "", "", "", "", "", "",
                     BydCloudRegionCatalog.DEFAULT_COUNTRY_CODE,
                     BydCloudRegionCatalog.DEFAULT_LANGUAGE,
-                    BydCloudRegionCatalog.DEFAULT_REGION, false, "");
+                    BydCloudRegionCatalog.DEFAULT_REGION, false, "", CN_DEFAULT_BRAND);
         }
 
         String storedRawPassword = bydCloud.optString("rawPassword", "");
@@ -137,8 +151,51 @@ public final class BydCloudConfig {
                 bydCloud.optString("language", BydCloudRegionCatalog.DEFAULT_LANGUAGE),
                 bydCloud.optString("region", BydCloudRegionCatalog.DEFAULT_REGION),
                 bydCloud.optBoolean("cloudDataMerge", false),
-                bydCloud.optString("energyType", "")
+                bydCloud.optString("energyType", ""),
+                bydCloud.optString("cnBrand", CN_DEFAULT_BRAND)
         );
+    }
+
+    /**
+     * Fork: normalize a cnBrand config value (name or numeric code) to its
+     * canonical name. Unknown values fall back to {@link #CN_DEFAULT_BRAND}.
+     */
+    public static String normalizeCnBrand(String raw) {
+        String v = raw == null ? "" : raw.trim().toLowerCase(java.util.Locale.ROOT);
+        switch (v) {
+            case "2": case "ocean":        return "ocean";
+            case "3": case "denza":        return "denza";
+            case "4": case "yangwang":     return "yangwang";
+            case "5": case "fangchengbao": case "fcb": return "fangchengbao";
+            case "1": case "dynasty":      return "dynasty";
+            default:                       return CN_DEFAULT_BRAND;
+        }
+    }
+
+    /** Fork: targetBrand / vehicleBrand code ("1".."5") for a brand name or code. */
+    public static String resolveCnBrandCode(String brand) {
+        switch (normalizeCnBrand(brand)) {
+            case "ocean":        return "2";
+            case "denza":        return "3";
+            case "yangwang":     return "4";
+            case "fangchengbao": return "5";
+            default:             return "1";
+        }
+    }
+
+    /**
+     * Fork: persist bydCloud.cnBrand alone. updateSection merges per key, so
+     * credentials and the VIN are untouched. Returns false when the write failed.
+     */
+    public static boolean saveCnBrand(String brand) {
+        try {
+            JSONObject delta = new JSONObject();
+            delta.put("cnBrand", normalizeCnBrand(brand));
+            return UnifiedConfigManager.updateSection("bydCloud", delta);
+        } catch (Exception e) {
+            logger.warn("Could not save cnBrand: " + e.getMessage());
+            return false;
+        }
     }
 
     /**

@@ -76,6 +76,7 @@ public class BydCloudApiHandler {
         status.put("vin", config.vin);
         status.put("countryCode", config.countryCode);
         status.put("region", config.region);
+        status.put("cnBrand", config.cnBrand);   // fork: CN brand identity
         // Never return derived keys to the UI
         status.put("hasLoginKey", !config.loginKey.isEmpty());
         status.put("hasCommandPwd", !config.commandPwd.isEmpty());
@@ -107,6 +108,9 @@ public class BydCloudApiHandler {
             JSONObject delta = new JSONObject();
             if (req.has("cloudDataMerge")) {
                 delta.put("cloudDataMerge", req.optBoolean("cloudDataMerge", false));
+            }
+            if (req.has("cnBrand")) {   // fork: CN brand identity
+                delta.put("cnBrand", BydCloudConfig.normalizeCnBrand(req.optString("cnBrand", "")));
             }
 
             boolean persisted = UnifiedConfigManager.updateSection("bydCloud", delta);
@@ -164,6 +168,11 @@ public class BydCloudApiHandler {
             String region = BydCloudRegionCatalog.regionForCountryCode(countryCode);
             if (language.isEmpty()) {
                 language = BydCloudRegionCatalog.languageForCountryCode(countryCode);
+            }
+            // Fork: persist the CN brand BEFORE the login below so
+            // BydCloudConfig.fromUnifiedConfig() applies it to targetBrand/BrandFlag.
+            if (req.has("cnBrand")) {
+                BydCloudConfig.saveCnBrand(req.optString("cnBrand", ""));
             }
 
             // Validate inputs

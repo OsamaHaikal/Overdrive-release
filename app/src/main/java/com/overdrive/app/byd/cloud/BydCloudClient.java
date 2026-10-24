@@ -116,7 +116,7 @@ public final class BydCloudClient {
             String brandUserId = "";
             JSONObject rel = token.optJSONObject("superBindRelationDtoMap");
             if (rel != null) {
-                JSONObject entry = rel.optJSONObject(BydCloudConfig.CN_TARGET_BRAND);
+                JSONObject entry = rel.optJSONObject(config.cnTargetBrand);
                 if (entry != null) {
                     String uid = entry.optString("userId", "");
                     if (!uid.isEmpty() && !"null".equals(uid)) {
@@ -1503,7 +1503,7 @@ public final class BydCloudClient {
         String broker;
         if (config.isChinaRegion()) {
             // CN: broker field is brand-specific (targetBrand 1..5 → dynasty/ocean/
-            // denza/yangwang/fangchengbao). We ship targetBrand=1 (dynasty).
+            // denza/yangwang/fangchengbao). Fork: follows bydCloud.cnBrand.
             broker = decoded.optString(cnBrokerField(), "");
         } else {
             // BYD API has a typo: "emqBorker" (sic) — check both spellings
@@ -1519,8 +1519,8 @@ public final class BydCloudClient {
     }
 
     /** CN EMQ broker response field for the configured targetBrand. */
-    private static String cnBrokerField() {
-        switch (BydCloudConfig.CN_TARGET_BRAND) {
+    private String cnBrokerField() {
+        switch (config.cnTargetBrand) {
             case "2": return "oceanEmqBroker";
             case "3": return "denzaEmqBroker";
             case "4": return "yangwangEmqBroker";
@@ -1534,14 +1534,14 @@ public final class BydCloudClient {
      * Build MQTT credentials for connecting to BYD's EMQ broker.
      * Returns [clientId, username, password].
      *
-     * CN uses the "dynasty" client-id prefix + topic root and the effective API
+     * CN uses the brand-flag ("dynasty"/"ocean"/…) client-id prefix + topic root and the effective API
      * identifier (superId preferred); overseas keeps "oversea" + userId. The
      * password derivation (ts + MD5(signToken+clientId+uid+ts)) is identical.
      */
     public String[] buildMqttCredentials() throws IOException {
         BydCloudSession s = ensureSession();
         boolean cn = config.isChinaRegion();
-        String prefix = cn ? "dynasty" : "oversea";
+        String prefix = cn ? config.cnBrandFlag : "oversea";
         String uid = cn ? s.effectiveApiIdentifier() : s.userId;
         String clientId = prefix + "_" + config.imeiMd5.toUpperCase();
         long tsSeconds = System.currentTimeMillis() / 1000;
@@ -1556,7 +1556,7 @@ public final class BydCloudClient {
     public String getMqttTopic() throws IOException {
         BydCloudSession s = ensureSession();
         if (config.isChinaRegion()) {
-            return "dynasty/res/" + s.effectiveApiIdentifier();
+            return config.cnBrandFlag + "/res/" + s.effectiveApiIdentifier();
         }
         return "oversea/res/" + s.userId;
     }
@@ -1695,7 +1695,7 @@ public final class BydCloudClient {
             signFields.put("identifier", config.username);
             signFields.put("loginType", 0);
             signFields.put("reqTimestamp", reqTimestamp);
-            signFields.put("targetBrand", BydCloudConfig.CN_TARGET_BRAND);
+            signFields.put("targetBrand", config.cnTargetBrand);
 
             String sign = BydCryptoUtils.sha1Mixed(
                     BydCryptoUtils.buildCnSignString(signFields, config.signPassword));
@@ -1709,7 +1709,7 @@ public final class BydCloudClient {
             outer.put("loginType", 0);
             outer.put("reqTimestamp", reqTimestamp);
             outer.put("sign", sign);
-            outer.put("targetBrand", BydCloudConfig.CN_TARGET_BRAND);
+            outer.put("targetBrand", config.cnTargetBrand);
             // Common device fields
             outer.put("ostype", "and");
             outer.put("imei", "BANGCLE01234");
@@ -1865,8 +1865,8 @@ public final class BydCloudClient {
             signFields.put("identifierType", idType);
             signFields.put("imeiMD5", config.imeiMd5);
             signFields.put("reqTimestamp", reqTimestamp);
-            signFields.put("targetBrand", BydCloudConfig.CN_TARGET_BRAND);
-            signFields.put("vehicleBrand", BydCloudConfig.CN_VEHICLE_BRAND);
+            signFields.put("targetBrand", config.cnTargetBrand);
+            signFields.put("vehicleBrand", config.cnVehicleBrand);
             if (hasVin) {
                 signFields.put("objective", vin);
             }
@@ -1885,8 +1885,8 @@ public final class BydCloudClient {
             outer.put("reqTimestamp", reqTimestamp);
             outer.put("sign", sign);
             outer.put("softType", JSONObject.NULL);
-            outer.put("targetBrand", BydCloudConfig.CN_TARGET_BRAND);
-            outer.put("vehicleBrand", BydCloudConfig.CN_VEHICLE_BRAND);
+            outer.put("targetBrand", config.cnTargetBrand);
+            outer.put("vehicleBrand", config.cnVehicleBrand);
             outer.put("version", JSONObject.NULL);
             // Common device fields
             outer.put("ostype", "and");

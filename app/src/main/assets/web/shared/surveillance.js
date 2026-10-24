@@ -5895,6 +5895,9 @@ window.BydCloud = {
         const regionSelect = document.getElementById('bydRegion');
         const summary = document.getElementById('bydRegionDerived');
         if (regionSelect) regionSelect.value = normalized;
+        // Fork: the CN brand selector only applies to the mainland stack.
+        var cnBrandField = document.getElementById('bydCnBrandField');
+        if (cnBrandField) cnBrandField.style.display = normalized === 'cn' ? '' : 'none';
         if (summary) {
             var entry = this.regionLabels[normalized];
             var label;
@@ -5980,6 +5983,9 @@ window.BydCloud = {
         const pwdInput = document.getElementById('bydPassword');
         const pinInput = document.getElementById('bydPin');
         this.applyCountrySelection(status.countryCode, status.region);
+        // Fork: reflect the persisted CN brand.
+        var cnBrandSelect = document.getElementById('bydCnBrand');
+        if (cnBrandSelect && status.cnBrand) cnBrandSelect.value = status.cnBrand;
 
         if (status.verified) {
             this.isConfigured = true;
@@ -6131,6 +6137,9 @@ window.BydCloud = {
                 countryCode: countryMeta ? countryMeta.code : 'GB',
                 language: countryMeta ? countryMeta.language : 'en'
             };
+            // Fork: CN brand identity travels with the setup request.
+            var cnBrandSel = document.getElementById('bydCnBrand');
+            if (cnBrandSel && region === 'cn') body.cnBrand = cnBrandSel.value;
             if (password) body.password = password;
             if (pin) body.controlPin = pin;
 
