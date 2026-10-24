@@ -12,6 +12,8 @@ Upstream is MIT; this fork keeps the licence and credits.
 | Updater | In-app updater points at this fork's releases. | `updater/AppUpdater.java` |
 | Build | opencv-mobile download URL fixed (upstream URL 404s on a clean clone). | `app/build.gradle.kts` |
 | CI | Signed release build + GitHub release on every push to `main`. | `.github/workflows/build.yml` |
+| My Car page | Phone-first premium control page (Tesla-app style): 3D hero, lock/climate/flash/find/trunk quick actions, windows/sunshade/sunroof, climate steppers, location, charging. Uses only existing endpoints. Sidebar entry "My Car". | `web/local/car.html`, `web/shared/fork/car.css`, `web/shared/fork/car.js`, `web/shared/app-shell.js` (one nav line), `web/i18n/{en,ar}.json` |
+| Resources | Vector placeholders for the four `google_maps_logo_*` drawables upstream references but never committed (`*.png` is gitignored); without them `processReleaseResources` fails on a clean clone. | `res/drawable/google_maps_logo_*.xml` |
 
 Unverified assumption: for Ocean cars the BrandFlag header and MQTT prefix are
 literally `ocean` (mirroring the `oceanEmqBroker` field BYD's API returns).
@@ -35,6 +37,15 @@ Signing key: the keystore is **not** in the repo. Losing it means the car must
 uninstall/reinstall instead of updating in place. Keep a backup. Because the
 key differs from upstream's, the closed `libod.so` blind-spot view renders
 black; everything else works.
+
+## My Car page notes
+
+- Hero title defaults to "BYD Seal 05" when the selected 3D model is `seal`; override it from the browser console with
+  `localStorage.setItem('od.car.name', 'Your name')`.
+- Trunk on the quick row needs a second tap within 3 s (it physically opens the car). Everything else fires on one tap.
+- Location opens Google Maps at the head unit's last GPS fix (from `/status.gps`).
+- Preview without a car: serve `app/src/main/assets/web` with any static server and stub the `/api/*` and `/status`
+  endpoints (a mock used during development lives outside the repo).
 
 ## Syncing with upstream
 

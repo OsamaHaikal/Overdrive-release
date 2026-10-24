@@ -29,7 +29,7 @@
         soc: null, rangeKm: null, odoKm: null, trunkOpen: null, windows: {},
         cloud: { configured: false, localKey: false }, cloudLock: null,
         gps: null, charging: null, vin: '',
-        modelId: 'seal', color: '#1A1A1E', modelName: '',
+        modelId: 'seal', color: '#1A1A1E', modelName: '', displayName: '',
         armed: {}, climateTimers: {}
     };
     var hero3d = null;
@@ -203,7 +203,7 @@
     function renderFooter() {
         setText('footOdo', S.odoKm != null ? t('car.odometer', 'Odometer') + ' ' + dist(S.odoKm) : '');
         setText('footVin', S.vin ? 'VIN ' + S.vin : '');
-        setText('footModel', S.modelName || CAR_NAME_DEFAULT);
+        setText('footModel', S.displayName || S.modelName || CAR_NAME_DEFAULT);
     }
 
     function renderAll() {
@@ -303,7 +303,8 @@
             }
             var custom = null;
             try { custom = localStorage.getItem(NAME_KEY); } catch (e) {}
-            setText('carName', custom || (S.modelId === 'seal' ? CAR_NAME_DEFAULT : (S.modelName || CAR_NAME_DEFAULT)));
+            S.displayName = custom || (S.modelId === 'seal' ? CAR_NAME_DEFAULT : (S.modelName || CAR_NAME_DEFAULT));
+            setText('carName', S.displayName);
             if (hero3d) { hero3d.setModel(S.modelId); hero3d.setColor(S.color); } else initHero3d();
             renderFooter();
         });

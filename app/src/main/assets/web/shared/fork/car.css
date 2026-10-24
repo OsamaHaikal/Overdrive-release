@@ -52,8 +52,8 @@
 .car-row-ico { flex: 0 0 auto; width: 26px; height: 26px; color: var(--on-surface-variant); }
 .car-row-ico svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .car-row-main { flex: 1; min-width: 0; }
-.car-row-title { font-size: 19px; font-weight: 600; color: var(--on-surface); }
-.car-row-sub { margin-top: 2px; font-size: 14px; color: var(--on-surface-variant); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.car-row-title { display: block; font-size: 19px; font-weight: 600; color: var(--on-surface); }
+.car-row-sub { display: block; margin-top: 2px; font-size: 14px; color: var(--on-surface-variant); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .car-row-sub.is-on { color: var(--primary); }
 .car-row-chev { flex: 0 0 auto; width: 18px; height: 18px; color: var(--outline); transition: transform .2s; }
 .car-row-chev svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
